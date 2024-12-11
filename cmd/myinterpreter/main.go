@@ -30,9 +30,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if len(fileContents) > 0 {
-		panic("Scanner not implemented")
-	} else {
-		fmt.Println("EOF  null") // Placeholder, remove this line when implementing the scanner
+	// Scanner implementation
+	for i := 0; i < len(fileContents); i++ {
+		c := fileContents[i]
+		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
+		switch c {
+		case '(':
+			fmt.Println("LEFT_PAREN ( null")
+		case ')':
+			fmt.Println("RIGHT_PAREN ) null")
+		}
 	}
+
+	fmt.Println("EOF  null")
+
 }
