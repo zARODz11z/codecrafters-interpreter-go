@@ -30,21 +30,27 @@ func main() {
 		os.Exit(1)
 	}
 
+	tokenTypes := map[byte]string{
+		'(': "LEFT_PAREN",
+		')': "RIGHT_PAREN",
+		'{': "LEFT_BRACE",
+		'}': "RIGHT_BRACE",
+		',': "COMMA",
+		'.': "DOT",
+		'-': "MINUS",
+		'+': "PLUS",
+		';': "SEMICOLON",
+		'*': "STAR",
+	}
+
 	// Scanner implementation
 	for i := 0; i < len(fileContents); i++ {
 		c := fileContents[i]
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
-		switch c {
-		case '(':
-			fmt.Println("LEFT_PAREN ( null")
-		case ')':
-			fmt.Println("RIGHT_PAREN ) null")
-		case '{':
-			fmt.Println("LEFT_BRACE { null")
-		case '}':
-			fmt.Println("RIGHT_BRACE } null")
-		}
 
+		if tokenType, ok := tokenTypes[c]; ok {
+			fmt.Printf("%s %c null\n", tokenType, c)
+		}
 	}
 
 	fmt.Println("EOF  null")
