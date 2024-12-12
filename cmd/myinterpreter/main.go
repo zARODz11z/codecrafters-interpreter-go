@@ -42,7 +42,7 @@ func main() {
 		';': "SEMICOLON",
 		'*': "STAR",
 	}
-
+	containsLexicalError := false
 	// Scanner implementation
 	for i := 0; i < len(fileContents); i++ {
 		c := fileContents[i]
@@ -50,9 +50,17 @@ func main() {
 
 		if tokenType, ok := tokenTypes[c]; ok {
 			fmt.Printf("%s %c null\n", tokenType, c)
+		} else {
+			fmt.Fprintf(os.Stderr, "[line 1] Error: Unexpected character: %c\n", c)
+			containsLexicalError = true
 		}
 	}
 
 	fmt.Println("EOF  null")
+	if containsLexicalError {
+		os.Exit(65)
+	} else {
+		os.Exit(0)
+	}
 
 }
