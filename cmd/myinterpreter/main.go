@@ -41,12 +41,19 @@ func main() {
 		'+': "PLUS",
 		';': "SEMICOLON",
 		'*': "STAR",
+		'=': "EQUAL",
 	}
 	containsLexicalError := false
 	// Scanner implementation
 	for i := 0; i < len(fileContents); i++ {
 		c := fileContents[i]
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
+
+		if c == '=' && i+1 < len(fileContents) && fileContents[i+1] == '=' {
+			fmt.Println("EQUAL_EQUAL == null")
+			i++
+			continue
+		}
 
 		if tokenType, ok := tokenTypes[c]; ok {
 			fmt.Printf("%s %c null\n", tokenType, c)
