@@ -42,6 +42,7 @@ func main() {
 		';': "SEMICOLON",
 		'*': "STAR",
 		'=': "EQUAL",
+		'!': "BANG",
 	}
 	containsLexicalError := false
 	// Scanner implementation
@@ -49,10 +50,23 @@ func main() {
 		c := fileContents[i]
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
 
-		if c == '=' && i+1 < len(fileContents) && fileContents[i+1] == '=' {
-			fmt.Println("EQUAL_EQUAL == null")
-			i++
-			continue
+		// Handle two-character lexemes
+		if i+1 < len(fileContents) {
+			nextChar := fileContents[i+1]
+			switch c {
+			case '=':
+				if nextChar == '=' {
+					fmt.Println("EQUAL_EQUAL == null")
+					i++ // Consume next character
+					continue
+				}
+			case '!':
+				if nextChar == '=' {
+					fmt.Println("BANG_EQUAL != null")
+					i++ // Consume next character
+					continue
+				}
+			}
 		}
 
 		if tokenType, ok := tokenTypes[c]; ok {
