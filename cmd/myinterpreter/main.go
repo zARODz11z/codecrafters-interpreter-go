@@ -45,6 +45,7 @@ func main() {
 		'!': "BANG",
 		'<': "LESS",
 		'>': "GREATER",
+		'/': "SLASH",
 	}
 	containsLexicalError := false
 	// Scanner implementation
@@ -80,9 +81,18 @@ func main() {
 					i++ // Consume next character
 					continue
 				}
+			case '/':
+				if nextChar == '/' {
+					// Skip the rest of the line
+					i = len(fileContents) - 1
+					i++
+					continue
+				} else {
+					fmt.Println("SLASH / null")
+					continue // Consume the '/' character
+				}
 			}
 		}
-
 		// Handle single-character lexemes
 		if tokenType, ok := tokenTypes[c]; ok {
 			fmt.Printf("%s %c null\n", tokenType, c)
@@ -90,7 +100,6 @@ func main() {
 			fmt.Fprintf(os.Stderr, "[line 1] Error: Unexpected character: %c\n", c)
 			containsLexicalError = true
 		}
-
 	}
 	fmt.Println("EOF  null")
 	if containsLexicalError {
@@ -98,5 +107,4 @@ func main() {
 	} else {
 		os.Exit(0)
 	}
-
 }
