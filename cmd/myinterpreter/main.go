@@ -51,6 +51,11 @@ func main() {
 	// Scanner implementation
 	for i := 0; i < len(fileContents); i++ {
 		c := fileContents[i]
+
+		// Ignore whitespace characters
+		if c == ' ' || c == '\t' || c == '\n' {
+			continue
+		}
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
 
 		// Handle two-character lexemes
