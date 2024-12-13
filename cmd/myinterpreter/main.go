@@ -60,6 +60,23 @@ func main() {
 			}
 			continue
 		}
+
+		if c == '"' {
+			// Handle string literals
+			start := i
+			i++ // Move past the opening quote
+			for i < len(fileContents) && fileContents[i] != '"' {
+				i++
+			}
+			if i >= len(fileContents) {
+				fmt.Fprintf(os.Stderr, "[line %d] Error: Unterminated string.\n", lineNumber)
+				containsLexicalError = true
+				break
+			}
+			// i is now at the closing quote
+			fmt.Printf("STRING \"%s\" %s\n", fileContents[start+1:i], fileContents[start+1:i])
+			continue
+		}
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
 
 		// Handle two-character lexemes
