@@ -48,12 +48,16 @@ func main() {
 		'/': "SLASH",
 	}
 	containsLexicalError := false
+	lineNumber := 1
 	// Scanner implementation
 	for i := 0; i < len(fileContents); i++ {
 		c := fileContents[i]
 
 		// Ignore whitespace characters
 		if c == ' ' || c == '\t' || c == '\n' {
+			if c == '\n' {
+				lineNumber++
+			}
 			continue
 		}
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
@@ -88,9 +92,11 @@ func main() {
 				}
 			case '/':
 				if nextChar == '/' {
-					// Skip the rest of the line
-					i = len(fileContents) - 1
-					i++
+					// Skip to the next newline character
+					for i < len(fileContents) && fileContents[i] != '\n' {
+						i++
+					}
+					lineNumber++
 					continue
 				} else {
 					fmt.Println("SLASH / null")
@@ -102,7 +108,7 @@ func main() {
 		if tokenType, ok := tokenTypes[c]; ok {
 			fmt.Printf("%s %c null\n", tokenType, c)
 		} else {
-			fmt.Fprintf(os.Stderr, "[line 1] Error: Unexpected character: %c\n", c)
+			fmt.Fprintf(os.Stderr, "[line %d] Error: Unexpected character: %c\n", lineNumber, c)
 			containsLexicalError = true
 		}
 	}
