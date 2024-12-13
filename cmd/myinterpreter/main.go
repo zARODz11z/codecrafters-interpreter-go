@@ -43,6 +43,8 @@ func main() {
 		'*': "STAR",
 		'=': "EQUAL",
 		'!': "BANG",
+		'<': "LESS",
+		'>': "GREATER",
 	}
 	containsLexicalError := false
 	// Scanner implementation
@@ -66,17 +68,30 @@ func main() {
 					i++ // Consume next character
 					continue
 				}
+			case '<':
+				if nextChar == '=' {
+					fmt.Println("LESS_EQUAL <= null")
+					i++ // Consume next character
+					continue
+				}
+			case '>':
+				if nextChar == '=' {
+					fmt.Println("GREATER_EQUAL >= null")
+					i++ // Consume next character
+					continue
+				}
 			}
 		}
 
+		// Handle single-character lexemes
 		if tokenType, ok := tokenTypes[c]; ok {
 			fmt.Printf("%s %c null\n", tokenType, c)
 		} else {
 			fmt.Fprintf(os.Stderr, "[line 1] Error: Unexpected character: %c\n", c)
 			containsLexicalError = true
 		}
-	}
 
+	}
 	fmt.Println("EOF  null")
 	if containsLexicalError {
 		os.Exit(65)
