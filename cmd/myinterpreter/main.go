@@ -77,6 +77,37 @@ func main() {
 			fmt.Printf("STRING \"%s\" %s\n", fileContents[start+1:i], fileContents[start+1:i])
 			continue
 		}
+
+		if c >= '0' && c <= '9' {
+			start := i
+			containsDecimal := false
+			i++ // Move past the first digit
+			for i < len(fileContents) && (fileContents[i] >= '0' && fileContents[i] <= '9') {
+				i++
+			}
+			if i < len(fileContents) && fileContents[i] == '.' {
+				containsDecimal = true
+				i++ // Move past the decimal point
+
+				for i < len(fileContents) && (fileContents[i] >= '0' && fileContents[i] <= '9') {
+					i++
+				}
+			}
+			numberLexeme := string(fileContents[start:i])
+			numberLiteral := numberLexeme
+			// If the number has a decimal point, remove unecessary trailing zeros
+			if containsDecimal {
+				numberLiteral = trimTrailingZeros(numberLiteral)
+			}
+			// For Whole numbers, add ".0" to match the books format
+			if !containsDecimal {
+				numberLiteral += ".0"
+			}
+			fmt.Printf("NUMBER %s %s\n", numberLexeme, numberLiteral)
+			i-- // Decrement i to reprocess the non-digit character
+			continue
+
+		}
 		// Go implicitly converts char literal to corresponding ascii code so it compares numbers
 
 		// Handle two-character lexemes
@@ -135,4 +166,18 @@ func main() {
 	} else {
 		os.Exit(0)
 	}
+}
+
+func trimTrailingZeros(number string) string {
+	// Remove trailing zeros after the decimal point.
+	// Ensure that at least one digit remains after the decimal.
+	for len(number) > 1 && number[len(number)-1] == '0' && number[len(number)-2] != '.' {
+		number = number[:len(number)-1] // Trim the last character (zero).
+	}
+	// If the last character is a '.', remove it as well.
+	// This handles cases like "34." -> "34".
+	if len(number) > 1 && number[len(number)-1] == '.' {
+		number = number[:len(number)-1] // Trim the decimal point.
+	}
+	return number // Return the properly formatted number string.
 }
