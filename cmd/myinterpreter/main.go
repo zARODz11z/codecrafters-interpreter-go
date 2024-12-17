@@ -47,6 +47,26 @@ func main() {
 		'>': "GREATER",
 		'/': "SLASH",
 	}
+
+	reservedWords := map[string]string{
+		"and":    "AND",
+		"class":  "CLASS",
+		"else":   "ELSE",
+		"false":  "FALSE",
+		"for":    "FOR",
+		"fun":    "FUN",
+		"if":     "IF",
+		"nil":    "NIL",
+		"or":     "OR",
+		"print":  "PRINT",
+		"return": "RETURN",
+		"super":  "SUPER",
+		"this":   "THIS",
+		"true":   "TRUE",
+		"var":    "VAR",
+		"while":  "WHILE",
+	}
+
 	containsLexicalError := false
 	lineNumber := 1
 	// Scanner implementation
@@ -78,16 +98,16 @@ func main() {
 			continue
 		}
 
-		if c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' {
+		if isAlpha(c) {
 			start := i
-			for i < len(fileContents) && (fileContents[i] >= 'a' && fileContents[i] <= 'z' || fileContents[i] >= 'A' && fileContents[i] <= 'Z' || fileContents[i] >= '0' && fileContents[i] <= '9' || fileContents[i] == '_') {
+			for i < len(fileContents) && (isAlpha(fileContents[i]) || isDigit(fileContents[i])) {
 				i++
 			}
-			identifier := string(fileContents[start:i])
-			if tokenType, ok := tokenTypes[c]; ok {
-				fmt.Printf("%s %s null\n", tokenType, identifier)
+			lexeme := string(fileContents[start:i])
+			if tokenType, ok := reservedWords[lexeme]; ok {
+				fmt.Printf("%s %s null\n", tokenType, lexeme)
 			} else {
-				fmt.Printf("IDENTIFIER %s null\n", identifier)
+				fmt.Printf("IDENTIFIER %s null\n", lexeme)
 			}
 			i-- // Decrement i to reprocess the non-alphanumeric character
 			continue
@@ -195,4 +215,12 @@ func trimTrailingZeros(number string) string {
 		number = number[:len(number)-1] // Trim the decimal point.
 	}
 	return number // Return the properly formatted number string.
+}
+
+func isAlpha(c byte) bool {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_'
+}
+
+func isDigit(c byte) bool {
+	return c >= '0' && c <= '9'
 }
