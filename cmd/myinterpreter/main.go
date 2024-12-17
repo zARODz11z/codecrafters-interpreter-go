@@ -78,6 +78,21 @@ func main() {
 			continue
 		}
 
+		if c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' {
+			start := i
+			for i < len(fileContents) && (fileContents[i] >= 'a' && fileContents[i] <= 'z' || fileContents[i] >= 'A' && fileContents[i] <= 'Z' || fileContents[i] >= '0' && fileContents[i] <= '9' || fileContents[i] == '_') {
+				i++
+			}
+			identifier := string(fileContents[start:i])
+			if tokenType, ok := tokenTypes[c]; ok {
+				fmt.Printf("%s %s null\n", tokenType, identifier)
+			} else {
+				fmt.Printf("IDENTIFIER %s null\n", identifier)
+			}
+			i-- // Decrement i to reprocess the non-alphanumeric character
+			continue
+		}
+
 		if c >= '0' && c <= '9' {
 			start := i
 			containsDecimal := false
